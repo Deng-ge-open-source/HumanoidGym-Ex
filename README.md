@@ -6,28 +6,35 @@ HumanoidGym-Ex is not a new humanoid learning framework from scratch. It is a Hu
 
 The main work in this repository is the migration of the original Humanoid-Gym codebase plus a Humanoid-Gym-style IsaacLab Direct backend. IsaacGym remains the compatibility baseline; IsaacLab / Isaac Sim is the primary extension path.
 
-HumanoidGym-Ex 不是一个从零重写的人形机器人强化学习框架。它是一个 **Humanoid-Gym 风格的扩展框架**：尽量保留原版 Humanoid-Gym 的脚本入口、配置方式、reward 写法、PPO 接口和使用习惯，同时逐步支持 IsaacGym、IsaacLab Direct Workflow，并为 Genesis 后端预留接口。
+HumanoidGym-Ex 是 **Humanoid-Gym 库的移植版，它使得HumanoidGym项目可以在目前最新的IsaacLab/Sim环境上进行训练，原始的老版本Humanoid-Gym库只支持Isaac Gym训练，在工具链上已经便老旧，因此我进行了移植，希望能够对大家开发人形机器人有帮助。（原仓库（https://github.com/roboterax/humanoid-gym））**：
 
-本仓库的主线工作是：迁移原版 Humanoid-Gym，并在不破坏原使用体验的前提下新增 IsaacLab Direct 支持。IsaacGym 是兼容基线，IsaacLab / Isaac Sim 是主要扩展方向。
+移植版本被命名为HumanoidGym-Ex，它保留原版 Humanoid-Gym 的脚本入口、配置方式、reward 写法、PPO 接口和使用习惯，可以同时支持IsaacLab训练和原版Isaac Gym的训练和训练脚本编写方式。你可以直接继承原版Humanoid-Gym /Legged Gym的脚本风格，无缝把原属于Humanoid-Gym 的Isaac Gym训练工程该用Isaac Lab进行训练。
+
+为了确保移植的可靠性，我进行了我移植版本的HumanoidGym-Ex(在Isaac Lab中)和原版HumanoidGym（在Isaac Gym中）的训练结果对比，对比表如下：
+
+【AI请补充对比表】
+
+对比结果表明，移植后的库非常好用，可以用于接近原版的HumanoidGym 项目在Isaac Lab/sim上的部署和训练。
+
 
 本项目由 **灯哥开源** 移植与维护。
 
 - B 站主页：https://space.bilibili.com/493192058
 - 迁移目标：让熟悉 Humanoid-Gym 的用户可以用接近原版的方式进入 IsaacLab / Isaac Sim 生态。
 
-## 项目截图
+## 效果动图
 
-IsaacLab Direct 与 IsaacGym 原版兼容路径的训练后策略并列播放：
+以下HumanoidGym-Ex 在 IsaacLab训练后的结果，与 IsaacGym 原版HumanoidGym的训练结果并列播放，大家可以直接看到训练效果：
 
 ![IsaacLab and IsaacGym walking policies](docs/assets/isaaclab_isaacgym_walk.gif)
 
 静态截图：
 
-IsaacGym 训练后策略播放：
+HumanoidGym 原版训练后策略播放：
 
 ![IsaacGym play](docs/assets/isaacgym_play_viewer.png)
 
-IsaacLab / Isaac Sim 训练后策略播放：
+HumanoidGym-Ex在IsaacLab / Isaac Sim 训练后的策略播放：
 
 ![IsaacLab play](docs/assets/isaaclab_play_viewer.png)
 
@@ -40,54 +47,11 @@ IsaacLab / Isaac Sim 训练后策略播放：
 - reward 函数集中在环境类里，便于调试和快速实验。
 - PPO 接口基于 `rsl_rl` 风格，训练链路简单。
 
-IsaacLab / Isaac Sim 的生态更现代，但 Manager-based workflow 对很多从 Humanoid-Gym / Legged-Gym 迁移过来的用户来说会显得拆分较多。HumanoidGym-Ex 的目标不是把 Humanoid-Gym 改造成一个全新的大框架，而是在保留原有使用体验的前提下，逐步接入新后端。
+IsaacLab / Isaac Sim 的生态更现代，但 它的新的工作流（Manager-based workflow ）对很多从 Humanoid-Gym / Legged-Gym 迁移过来的用户来说会显得有学习成本，因此我做了这个HumanoidGym-Ex项目，实现了保持原本HumanoidGym风格的工程模式下，把训练器和仿真器从Isaac Gym换成了Isaac Lab，使其适用于最新的仿真科技。同步的，HumanoidGym-Ex在能够实现Isaac Lab/sim训练方式的前提下，也同步支持原生Isaac Gym的train和play，实现了一套框架，同步支持Isaac Lab/sim和Isaac Gym强化学习后端。
 
-## 当前状态
 
-| 模块 | 状态 |
-| --- | --- |
-| IsaacGym 后端 | 已可训练、play、导出策略 |
-| IsaacLab Direct 后端 | 已可 smoke、训练、play、导出策略 |
-| Genesis 后端 | 已预留接口，暂未完整实现 |
-| XBot-L 原版示例 | 已迁移 |
-| MuJoCo sim2sim | 已迁移原版脚本 |
-| PPO | 保留本地 Humanoid-Gym / rsl_rl 风格接口 |
-| reward parity | 默认 reward 名称和默认 reward scale 保持一致 |
-| rough terrain | Gym / Lab 均可运行，长训练曲线仍有差距 |
-| measured heights | Gym / Lab 均支持，actor `705`，critic `780` |
 
-默认任务名：
-
-```bash
-humanoid_ppo
-```
-
-默认示例机器人：
-
-```text
-RobotEra XBot-L
-```
-
-## 设计原则
-
-HumanoidGym-Ex 的核心原则是：
-
-1. **不重写用户习惯**  
-   熟悉 Humanoid-Gym 的用户应该能快速找到 train、play、cfg、reward、obs、reset、commands。
-
-2. **不引入复杂插件系统**  
-   backend interface 只抽象必要接口，不把项目做成过度工程化的大平台。
-
-3. **不把 reward / obs 拆成 Manager-based 风格**  
-   reward 仍然集中、直观，便于从原版代码迁移。
-
-4. **IsaacLab 使用 Direct Workflow**  
-   IsaacLab 路径基于 `DirectRLEnv`、`Articulation`、`Scene`、`ContactSensor` 和 `RayCaster`，不使用 Manager-based task。
-
-5. **默认 reward 保持一致**  
-   IsaacGym 和 IsaacLab 默认使用同一套 reward 名称和 reward scale。当前调试优先做数据顺序、接触、地形、reset、随机化和物理参数对齐，而不是为某个后端单独改 reward。
-
-## 目录结构
+## 项目目录结构
 
 ```text
 humanoid_gym_ex/
@@ -106,53 +70,20 @@ humanoid_gym_ex/
 └── README.md
 ```
 
-## 安装
+## 环境安装
 
 ### IsaacGym 环境
 
-假设你已经安装 IsaacGym Preview 4，并有一个类似 `legged_gym` 的 conda 环境：
-
-```bash
-conda activate legged_gym
-pip install -e .
-```
+HumanoidGym-Ex支持Isaacgym环境和IsaacLab/Sim双环境，如果你需要使用IsaacGym来启动训练，安装方式可以参考isaacGym官方仓库或者我的视频：https://www.bilibili.com/video/BV1kYo8BhEkN/?vd_source=5d20af79ff500db9da1b6e7e1213da51
 
 ### IsaacLab / Isaac Sim 环境
 
-IsaacLab 建议使用单独 conda 环境。本仓库测试时使用：
+Isaac Lab可以参考官方的安装方式：IsaacLab安装链接，【Ai你帮我找好后补充】
 
-```bash
-/home/cra02/anaconda3/envs/env_isaaclab
-```
+## 启动训练--使用IsaacLab 
+这里是基于IsaacLab启动HumanoidGym -Ex自带的Xbot机器人例子进行训练的方法
 
-运行 IsaacLab 脚本时建议显式设置 `PYTHONPATH`：
-
-```bash
-export PYTHONPATH=/path/to/HumanoidGym-Ex
-```
-
-## IsaacLab Direct 使用方式
-
-IsaacLab 是 HumanoidGym-Ex 在原版 Humanoid-Gym 迁移基础上新增的核心能力。本路径不使用 Manager-based task，而是保留 Humanoid-Gym 风格的上层 env / reward / obs / reset 写法。
-
-原版 IsaacGym 训练 / play 启动方式仍然保留，但已放入折叠区：[IsaacGym 原版兼容训练 / play 命令](#isaacgym-original-compatible-commands)。
-
-### IsaacLab PPO smoke
-
-```bash
-PYTHONPATH=/path/to/HumanoidGym-Ex \
-WANDB_MODE=offline \
-conda run -p /path/to/env_isaaclab \
-python humanoid_gym_ex/scripts/train_isaaclab.py \
-  --headless \
-  --num_envs 64 \
-  --num_steps_per_env 60 \
-  --max_iterations 1 \
-  --run_name isaaclab_ppo_smoke
-```
-
-### IsaacLab 训练
-
+启动平地训练
 ```bash
 PYTHONPATH=/path/to/HumanoidGym-Ex \
 WANDB_MODE=offline \
@@ -167,7 +98,7 @@ python humanoid_gym_ex/scripts/train_isaaclab.py \
   --device cuda:0
 ```
 
-### IsaacLab rough terrain + measured heights
+### 启动粗糙地形训练
 
 ```bash
 PYTHONPATH=/path/to/HumanoidGym-Ex \
@@ -186,16 +117,7 @@ python humanoid_gym_ex/scripts/train_isaaclab.py \
   --device cuda:0
 ```
 
-rough measured-height 模式下：
-
-```text
-actor policy obs: 705
-critic obs:      780
-```
-
-这与原版 Humanoid-Gym XBot 路径一致：actor 不拼接 height samples，critic privileged obs 拼接 height samples。
-
-### IsaacLab Play
+### Isaac Lab上进行训练结果播放
 
 ```bash
 PYTHONPATH=/path/to/HumanoidGym-Ex \
@@ -211,29 +133,9 @@ python humanoid_gym_ex/scripts/play_isaaclab.py \
   --device cuda:0
 ```
 
-IsaacLab viewer 默认开启近距离可缩放跟随相机：
 
-- 默认 `--camera_zoom 0.45`
-- 鼠标滚轮可以继续自由缩放
-- 相机会跟随机器人 root，但不会强制覆盖你手动调整后的 zoom
-
-<details>
-<summary id="isaacgym-original-compatible-commands">IsaacGym 原版兼容训练 / play 命令（点击展开）</summary>
-
-本节主要用于说明 HumanoidGym-Ex 对原版 Humanoid-Gym / IsaacGym 工作流的兼容性。日常阅读 README 时可以先关注上面的 IsaacLab Direct 部分。
-
-### Smoke test
-
-```bash
-python humanoid_gym_ex/scripts/train.py \
-  --task=humanoid_ppo \
-  --headless \
-  --num_envs 64 \
-  --max_iterations 1
-```
-
-### 训练
-
+### 启动训练--使用IsaacGym 
+这里是启动HumanoidGym-Ex 自带的Xbot机器人例子进行训练的方法,基于IsaacGym，这体现了HumanoidGym-Ex 同时兼容IsaacLab和IsaacGym的特性
 ```bash
 python humanoid_gym_ex/scripts/train.py \
   --task=humanoid_ppo \
@@ -245,7 +147,7 @@ python humanoid_gym_ex/scripts/train.py \
   --rl_device cuda:0
 ```
 
-### rough terrain + measured heights + terrain curriculum
+### 启动粗糙地形训练
 
 ```bash
 python humanoid_gym_ex/scripts/train.py \
@@ -261,7 +163,7 @@ python humanoid_gym_ex/scripts/train.py \
   --rl_device cuda:0
 ```
 
-### Play
+### Isaac Gym上进行训练结果播放
 
 ```bash
 python humanoid_gym_ex/scripts/play.py \
@@ -270,7 +172,7 @@ python humanoid_gym_ex/scripts/play.py \
   --checkpoint 1000
 ```
 
-### Play with rough terrain
+### 当用粗糙地形进行训练时，用这样的方式启动
 
 ```bash
 HUMANOID_GYM_EX_EXPORT_POLICY=0 \
@@ -286,69 +188,6 @@ python humanoid_gym_ex/scripts/play.py \
   --terrain_curriculum
 ```
 
-</details>
-
-## 与原版 Humanoid-Gym 的兼容目标
-
-HumanoidGym-Ex 尽量保持：
-
-- 原版 task registry 风格
-- 原版 nested Python cfg 风格
-- 原版 `cfg.rewards.scales` reward dispatch
-- 原版 observation / privileged observation 维度
-- 原版 PPO runner 使用方式
-- 原版 XBot-L 资源路径和 MuJoCo sim2sim 示例
-- 原版脚本中心化体验
-
-默认 XBot-L 维度：
-
-```text
-num_actions = 12
-num_single_obs = 47
-frame_stack = 15
-num_observations = 705
-single_num_privileged_obs = 73
-c_frame_stack = 3
-num_privileged_obs = 219
-rough measured-height critic obs = 780
-```
-
-## 后端抽象
-
-当前 backend interface 保持极简：
-
-```text
-create_sim()
-create_envs()
-step(actions)
-reset(env_ids)
-get_root_states()
-get_dof_pos()
-get_dof_vel()
-get_contact_forces()
-set_dof_targets()
-apply_domain_randomization()
-render_or_viewer_step()
-```
-
-设计目的不是构建复杂插件系统，而是让上层 Humanoid-Gym 风格环境尽量不感知 IsaacGym / IsaacLab 的底层差异。
-
-## 文档
-
-- [Architecture review](docs/ARCHITECTURE_REVIEW.md)
-- [Backend interface](docs/BACKEND_INTERFACE.md)
-- [Design goals](docs/DESIGN_GOALS.md)
-- [IsaacLab migration notes](docs/MIGRATION_ISAACLAB.md)
-- [Roadmap](docs/ROADMAP.md)
-
-## Roadmap
-
-- Phase 0: 原版 Humanoid-Gym 代码迁移。
-- Phase 1: IsaacGym backend adapter，保持原版训练和 play 可运行。
-- Phase 2: IsaacLab Direct Workflow backend，支持 XBot smoke / train / play / rough terrain。
-- Phase 3: Genesis backend 接口预留。
-- Phase 4: 更多机器人、更多原版场景和跨后端长训练统计。
-
 ## 致谢与声明
 
 本项目基于原版 `roboterax/humanoid-gym` 进行迁移和扩展，并保留迁移源文件中的 BSD-3-Clause license headers。
@@ -358,7 +197,7 @@ render_or_viewer_step()
 - Humanoid-Gym 原作者与 RobotEra XBot-L 示例。
 - Legged-Gym / rsl_rl 生态。
 - NVIDIA IsaacGym、IsaacLab、Isaac Sim。
-- 灯哥开源社区。
+- 灯哥
 
 灯哥开源 B 站视频号：
 
