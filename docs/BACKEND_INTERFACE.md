@@ -57,8 +57,8 @@ The first IsaacLab env is intentionally local and explicit:
 
 - [isaaclab_env.py](/home/cra02/Documents/GitHub/HumanoidGym-Ex/humanoid_gym_ex/envs/robots/xbot/isaaclab_env.py)
 - [isaaclab_vec_env.py](/home/cra02/Documents/GitHub/HumanoidGym-Ex/humanoid_gym_ex/envs/robots/xbot/isaaclab_vec_env.py)
-- [isaaclab_smoke.py](/home/cra02/Documents/GitHub/HumanoidGym-Ex/humanoid_gym_ex/scripts/isaaclab_smoke.py)
 - [train_isaaclab.py](/home/cra02/Documents/GitHub/HumanoidGym-Ex/humanoid_gym_ex/scripts/train_isaaclab.py)
+- [play_isaaclab.py](/home/cra02/Documents/GitHub/HumanoidGym-Ex/humanoid_gym_ex/scripts/play_isaaclab.py)
 
 It does not introduce a plugin system or Manager-based task decomposition. Reward, observation, command, and reset code remain in one DirectRLEnv subclass so Humanoid-Gym users can follow it.
 
@@ -77,5 +77,3 @@ Terrain support is intentionally narrow and script-driven:
 - `--terrain rough`, `--terrain heightfield`, and `--terrain trimesh` use IsaacLab `TerrainImporterCfg(terrain_type="generator")` with `ROUGH_TERRAINS_CFG`.
 - `--terrain_curriculum` uses `TerrainImporter.update_env_origins(...)` from reset logic.
 - `--measure_heights` attaches a `RayCaster` to `base_link` and appends `187` sampled heights per observation frame.
-
-The backend smoke validation is scripted in [validate_smoke.sh](/home/cra02/Documents/GitHub/HumanoidGym-Ex/humanoid_gym_ex/scripts/validate_smoke.sh).

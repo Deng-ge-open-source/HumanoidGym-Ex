@@ -11,6 +11,7 @@ wandb/
 *.npy
 test_data/
 *.ipynb
+_local_eval/
 # Compiled Java class files
 *.class
 
@@ -67,6 +68,7 @@ logs/XBot_ppo/exported/policies/*
 !logs/XBot_ppo/exported/policies/policy_example.pt
 runs
 videos
+docs/HumanoidGym-Ex_README.html
 # resources
 
 # other
