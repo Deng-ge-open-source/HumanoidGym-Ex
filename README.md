@@ -2,14 +2,29 @@
 
 **中文 | [English](#english)**
 
-HumanoidGym-Ex is not a new humanoid learning framework from scratch. It is a Humanoid-Gym-style extension framework that preserves the original Humanoid-Gym user experience while enabling future Isaac Lab and Genesis backends.
-
-The main work in this repository is the migration of the original Humanoid-Gym codebase plus a Humanoid-Gym-style Isaac Lab Direct backend. Isaac Gym remains the compatibility baseline; Isaac Lab / Isaac Sim is the primary extension path.
+HumanoidGym-Ex is a migrated version of the original [Humanoid-Gym](https://github.com/roboterax/humanoid-gym). It enables Humanoid-Gym-style projects to train in the newer Isaac Lab / Isaac Sim environment. The original Humanoid-Gym mainly supports Isaac Gym, whose toolchain is becoming old, so this project migrates the workflow to help humanoid robot developers.
 
 HumanoidGym-Ex 是 Humanoid-Gym 库的移植版，它使得 Humanoid-Gym 风格项目可以在目前最新的 Isaac Lab / Isaac Sim 环境上进行训练。原始的老版本 Humanoid-Gym 库只支持 Isaac Gym 训练，在工具链上已经变得老旧，因此我进行了移植，希望能够对大家开发人形机器人有帮助。（原仓库：https://github.com/roboterax/humanoid-gym）。
 
 移植版本被命名为 HumanoidGym-Ex，它保留原版 Humanoid-Gym 的脚本入口、配置方式、reward 写法、PPO 接口和使用习惯，可以同时支持 Isaac Lab 训练和原版 Isaac Gym 的训练与脚本编写方式。你可以直接继承原版 Humanoid-Gym / Legged-Gym 的脚本风格，无缝把原属于 Humanoid-Gym 的 Isaac Gym 训练工程改用 Isaac Lab 进行训练。
 
+## 效果动图
+
+以下是 HumanoidGym-Ex 在 Isaac Lab 训练后的结果，与 Isaac Gym 原版 Humanoid-Gym 的训练结果并列播放，大家可以直接看到训练效果：
+
+![Isaac Lab and Isaac Gym walking policies](docs/assets/isaaclab_isaacgym_walk.gif)
+
+静态截图：
+
+Humanoid-Gym 原版训练后策略播放：
+
+![Isaac Gym play](docs/assets/isaacgym_play_viewer.png)
+
+HumanoidGym-Ex 在 Isaac Lab / Isaac Sim 训练后的策略播放：
+
+![Isaac Lab play](docs/assets/isaaclab_play_viewer.png)
+
+## 移植的可靠性
 为了确保移植的可靠性，我进行了移植版本 HumanoidGym-Ex（在 Isaac Lab 中）和原版 Humanoid-Gym（在 Isaac Gym 中）的训练结果对比，对比表如下：
 
 | 对比项 | 原版 Humanoid-Gym / Isaac Gym | HumanoidGym-Ex / Isaac Lab | 对齐度 / 结论 |
@@ -35,21 +50,7 @@ HumanoidGym-Ex 是 Humanoid-Gym 库的移植版，它使得 Humanoid-Gym 风格�
 - B 站主页：https://space.bilibili.com/493192058
 - 迁移目标：让熟悉 Humanoid-Gym 的用户可以用接近原版的方式进入 Isaac Lab / Isaac Sim 生态。
 
-## 效果动图
 
-以下是 HumanoidGym-Ex 在 Isaac Lab 训练后的结果，与 Isaac Gym 原版 Humanoid-Gym 的训练结果并列播放，大家可以直接看到训练效果：
-
-![Isaac Lab and Isaac Gym walking policies](docs/assets/isaaclab_isaacgym_walk.gif)
-
-静态截图：
-
-Humanoid-Gym 原版训练后策略播放：
-
-![Isaac Gym play](docs/assets/isaacgym_play_viewer.png)
-
-HumanoidGym-Ex 在 Isaac Lab / Isaac Sim 训练后的策略播放：
-
-![Isaac Lab play](docs/assets/isaaclab_play_viewer.png)
 
 ## 为什么做 HumanoidGym-Ex
 
@@ -208,7 +209,7 @@ HumanoidGym-Ex 框架也可以在我的一键强化学习工程生成器 StackFo
 
 StackForce Sim Ready 是我开发的一个方便快速生成强化学习工程的工具，只需要给定 USD / URDF 文件，就能够一键生成可以用于强化学习训练的强化学习工程，0 代码实现强化学习训练。
 
-![StackForce Sim Ready](docs/assets/stackforce_sim_ready.png)
+![StackForce Sim Ready](docs/assets/stackforce_sim_ready_zh.jpg)
 
 ## 致谢与声明
 
@@ -231,14 +232,26 @@ https://space.bilibili.com/493192058
 
 # HumanoidGym-Ex English README
 
-HumanoidGym-Ex is not a new humanoid learning framework from scratch. It is a Humanoid-Gym-style extension framework that preserves the original Humanoid-Gym user experience while enabling future Isaac Lab and Genesis backends.
-
-The main work in this repository is the migration of the original Humanoid-Gym codebase plus a Humanoid-Gym-style Isaac Lab Direct backend. Isaac Gym remains the compatibility baseline; Isaac Lab / Isaac Sim is the primary extension path.
-
 HumanoidGym-Ex is a migrated version of the original [Humanoid-Gym](https://github.com/roboterax/humanoid-gym). It enables Humanoid-Gym-style projects to train in the newer Isaac Lab / Isaac Sim environment. The original Humanoid-Gym mainly supports Isaac Gym, whose toolchain is becoming old, so this project migrates the workflow to help humanoid robot developers.
 
 The migrated version is named HumanoidGym-Ex. It preserves the original Humanoid-Gym script entry points, configuration style, reward style, PPO interface, and usage habits. It supports both Isaac Lab training and the original Isaac Gym training workflow. Users can keep the original Humanoid-Gym / Legged-Gym scripting style and move Isaac Gym-based Humanoid-Gym projects to Isaac Lab.
+## Demo
 
+The following animation shows HumanoidGym-Ex trained in Isaac Lab side by side with the original Humanoid-Gym-style result trained in Isaac Gym:
+
+![Isaac Lab and Isaac Gym walking policies](docs/assets/isaaclab_isaacgym_walk.gif)
+
+Static screenshots:
+
+Original Humanoid-Gym policy playback in Isaac Gym:
+
+![Isaac Gym play](docs/assets/isaacgym_play_viewer.png)
+
+HumanoidGym-Ex policy playback after training in Isaac Lab / Isaac Sim:
+
+![Isaac Lab play](docs/assets/isaaclab_play_viewer.png)
+
+## Reliability of transplantation
 To verify the migration, I compared the training results of HumanoidGym-Ex in Isaac Lab with the original Humanoid-Gym style training results in Isaac Gym:
 
 | Item | Original Humanoid-Gym / Isaac Gym | HumanoidGym-Ex / Isaac Lab | Alignment / Result |
@@ -264,21 +277,7 @@ This project is migrated and maintained by **Deng Ge Open Source**.
 - Bilibili: https://space.bilibili.com/493192058
 - Migration goal: let users familiar with Humanoid-Gym enter the Isaac Lab / Isaac Sim ecosystem in a way close to the original project.
 
-## Demo
 
-The following animation shows HumanoidGym-Ex trained in Isaac Lab side by side with the original Humanoid-Gym-style result trained in Isaac Gym:
-
-![Isaac Lab and Isaac Gym walking policies](docs/assets/isaaclab_isaacgym_walk.gif)
-
-Static screenshots:
-
-Original Humanoid-Gym policy playback in Isaac Gym:
-
-![Isaac Gym play](docs/assets/isaacgym_play_viewer.png)
-
-HumanoidGym-Ex policy playback after training in Isaac Lab / Isaac Sim:
-
-![Isaac Lab play](docs/assets/isaaclab_play_viewer.png)
 
 ## Why HumanoidGym-Ex
 
@@ -437,7 +436,7 @@ HumanoidGym-Ex can also be used as a generated framework in my one-click reinfor
 
 StackForce Sim Ready is a tool I developed for quickly generating reinforcement learning projects. Given a USD / URDF file, it can generate a reinforcement learning project for training with one click, enabling zero-code reinforcement learning training.
 
-![StackForce Sim Ready](docs/assets/stackforce_sim_ready.png)
+![StackForce Sim Ready](docs/assets/stackforce_sim_ready_en.png)
 
 ## Credits
 
