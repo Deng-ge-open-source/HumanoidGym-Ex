@@ -55,10 +55,10 @@ Phase 2 adds `IsaacLabBackend` as a tensor adapter around a DirectRLEnv and Arti
 
 The first IsaacLab env is intentionally local and explicit:
 
-- [isaaclab_env.py](/home/cra02/Documents/GitHub/HumanoidGym-Ex/humanoid_gym_ex/envs/robots/xbot/isaaclab_env.py)
-- [isaaclab_vec_env.py](/home/cra02/Documents/GitHub/HumanoidGym-Ex/humanoid_gym_ex/envs/robots/xbot/isaaclab_vec_env.py)
-- [train_isaaclab.py](/home/cra02/Documents/GitHub/HumanoidGym-Ex/humanoid_gym_ex/scripts/train_isaaclab.py)
-- [play_isaaclab.py](/home/cra02/Documents/GitHub/HumanoidGym-Ex/humanoid_gym_ex/scripts/play_isaaclab.py)
+- [isaaclab_env.py](../humanoid_gym_ex/envs/robots/xbot/isaaclab_env.py)
+- [isaaclab_vec_env.py](../humanoid_gym_ex/envs/robots/xbot/isaaclab_vec_env.py)
+- [train_isaaclab.py](../humanoid_gym_ex/scripts/train_isaaclab.py)
+- [play_isaaclab.py](../humanoid_gym_ex/scripts/play_isaaclab.py)
 
 It does not introduce a plugin system or Manager-based task decomposition. Reward, observation, command, and reset code remain in one DirectRLEnv subclass so Humanoid-Gym users can follow it.
 

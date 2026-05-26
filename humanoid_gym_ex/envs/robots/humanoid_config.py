@@ -64,6 +64,7 @@ class XBotLCfg(LeggedRobotCfg):
         terminate_after_contacts_on = ['base_link']
         penalize_contacts_on = ["base_link"]
         self_collisions = 0  # 1 to disable, 0 to enable...bitwise filter
+        isaaclab_self_collisions = 1  # Isaac Lab/Sim: disable by default to avoid URDF self-contact lift-off.
         flip_visual_attachments = False
         replace_cylinder_with_capsule = False
         fix_base_link = False

@@ -107,6 +107,11 @@ def configure_xbot_isaaclab_parity_termination(env_cfg, profile="none"):
     raise ValueError("Unsupported IsaacLab parity termination profile '{}'. Use none or isaacgym_like.".format(profile))
 
 
+def _humanoid_gym_collision_filter_to_isaaclab_enabled(value):
+    """Convert Humanoid-Gym's collision filter flag to IsaacLab's boolean."""
+    return not bool(value)
+
+
 @configclass
 class XBotIsaacLabEnvCfg(DirectRLEnvCfg):
     """DirectRLEnv config mirroring the original XBot-L Humanoid-Gym task."""
@@ -166,13 +171,18 @@ class XBotIsaacLabEnvCfg(DirectRLEnvCfg):
             fix_base=XBotLCfg.asset.fix_base_link,
             merge_fixed_joints=True,
             activate_contact_sensors=True,
+            self_collision=_humanoid_gym_collision_filter_to_isaaclab_enabled(
+                getattr(XBotLCfg.asset, "isaaclab_self_collisions", XBotLCfg.asset.self_collisions)
+            ),
             rigid_props=sim_utils.RigidBodyPropertiesCfg(
                 max_depenetration_velocity=XBotLCfg.sim.physx.max_depenetration_velocity,
                 solver_position_iteration_count=XBotLCfg.sim.physx.num_position_iterations,
                 solver_velocity_iteration_count=XBotLCfg.sim.physx.num_velocity_iterations,
             ),
             articulation_props=sim_utils.ArticulationRootPropertiesCfg(
-                enabled_self_collisions=not bool(XBotLCfg.asset.self_collisions),
+                enabled_self_collisions=_humanoid_gym_collision_filter_to_isaaclab_enabled(
+                    getattr(XBotLCfg.asset, "isaaclab_self_collisions", XBotLCfg.asset.self_collisions)
+                ),
                 solver_position_iteration_count=XBotLCfg.sim.physx.num_position_iterations,
                 solver_velocity_iteration_count=XBotLCfg.sim.physx.num_velocity_iterations,
             ),

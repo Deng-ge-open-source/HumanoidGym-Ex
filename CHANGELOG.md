@@ -1,97 +1,23 @@
 # Changelog
 
-## Unreleased - Phase 2 IsaacLab Direct Smoke
+## Unreleased - Phase 2 IsaacLab Direct Backend
 
-- Aligned IsaacLab rough measured-height observations with the original Humanoid-Gym XBot path: actor policy observations stay at `705`, while critic privileged observations expand to `780`.
-- Added `humanoid_gym_ex/scripts/run_original_scene_matrix.sh` and `docs/ORIGINAL_SCENE_MATRIX.md` for rough-terrain long-run, replay, heightfield/trimesh, and full-smoke validation.
-- Completed 1000-iteration rough measured-height terrain-curriculum runs for IsaacGym and IsaacLab on separate GPUs. IsaacLab runs end-to-end with matching reward definitions and `705/780` actor/critic dimensions, but rough long-training convergence is not yet equivalent (`81.50%` tail reward-per-step equivalence; `70.21%` tail reward equivalence).
-- Fixed rollout diagnostic summaries so checkpoint rollouts report `action_mode: policy` instead of the fallback CLI action mode.
-- Added `docs/FINAL_TRAINING_EVAL.md` with the 1000-iteration IsaacGym vs IsaacLab final-training assessment.
-- Evaluated the final 1000-iteration checkpoints with native and cross-backend fixed-command rollouts. Training-curve equivalence is above `98.72%` on all final/tail metrics and above `99.32%` on tail metrics; native final-policy replay averages `97.70%` equivalence across core behavior metrics with zero resets on both backends.
-- Implemented an initial `IsaacLabBackend` tensor adapter for DirectRLEnv and Articulation state access.
-- Added `XBotIsaacLabEnv`, a DirectRLEnv smoke environment that loads the migrated XBot-L URDF through IsaacLab.
-- Added `IsaacLabRslRlVecEnv` to adapt IsaacLab DirectRLEnv outputs to the local Humanoid-Gym PPO interface.
-- Added `humanoid_gym_ex/scripts/isaaclab_smoke.py` for headless IsaacLab reset/step validation.
-- Added `humanoid_gym_ex/scripts/train_isaaclab.py` for IsaacLab PPO smoke training.
-- Preserved XBot policy/critic/action dimensions in the IsaacLab smoke path: `705/219/12`.
-- Verified IsaacLab Direct smoke with two environments and two steps.
-- Verified IsaacLab PPO smoke at `2 envs x 4 steps` and `64 envs x 60 steps`.
-- Migrated IsaacLab reward dispatch to the original XBot `cfg.rewards.scales` names.
-- Added IsaacLab versions of the XBot reward terms for joint pose, gait/contact, velocity tracking, base pose, energy, collision, and action smoothness.
-- Added IsaacLab action delay/noise, root-velocity push randomization, rigid material friction randomization, and base-mass randomization.
-- Added `--check_randomization` to `isaaclab_smoke.py`.
-- Added IsaacLab command curriculum support.
-- Added `play_isaaclab.py` for checkpoint load, headless rollout, and TorchScript policy export.
-- Added `validate_smoke.sh` for local automatic IsaacGym and IsaacLab smoke validation.
-- Added IsaacLab rough terrain support through generated terrain import, including `rough`, `heightfield`, and `trimesh` script options.
-- Added IsaacLab terrain curriculum updates via `TerrainImporter.update_env_origins(...)`.
-- Added IsaacLab RayCaster measured heights; rough measured-height mode keeps XBot actor observations at `705` and expands critic observations to `780`.
-- Added `compare_training_curves.py` to parse IsaacGym and IsaacLab PPO logs into comparable curve summaries.
-- Added IsaacGym and IsaacLab rollout diagnostic scripts for zero/random action backend alignment.
-- Fixed IsaacLab PD torque computation to recompute torque on every physics substep, matching the IsaacGym decimation loop.
-- Fixed IsaacLab VecEnv `episode_length_buf` forwarding so `init_at_random_ep_len=True` reaches the DirectRLEnv buffer.
-- Changed IsaacLab termination to use contact-force history for termination bodies.
-- Canonicalized IsaacLab joint state/action/torque tensors to IsaacGym joint order.
-- Canonicalized IsaacLab reference DOF targets to the same IsaacGym joint order.
-- Added trained-policy replay, per-step trace, contact-distribution, asset/body/joint-order, and shape/material diagnostics.
-- Added optional IsaacLab strict fall termination switches for base height/orientation and `--parity_termination_profile isaacgym_like`.
-- Ran `64 envs x 60 steps x 50 iterations` and `64 envs x 60 steps x 200 iterations` IsaacGym and IsaacLab curve checks. IsaacLab is close in reward rate but still longer in episode length; strict base-height termination remains opt-in because it changes reward rate.
-- Added IsaacLab rigid-shape parity writes for nominal material/contact settings: friction `1.0`, restitution `0.0`, contact offset `0.01`, and rest offset `0.0`.
-- Moved IsaacLab diagnostic domain-randomization disabling before env initialization so nominal shape/material exports are not polluted by startup randomization.
-- Re-ran trained-policy replay and 50-iteration curve checks after shape/material parity. Reward-rate alignment improved, while episode length remains longer than IsaacGym.
-- Aligned IsaacLab XBot PhysX solver settings with IsaacGym: TGS solver, `4/1` position/velocity iterations, `0.1` bounce threshold, rigid contact buffer, actor max depenetration velocity, and articulation/body solver iteration counts.
-- Re-ran IsaacLab-trained policy replay after PhysX solver parity. Done rate moved from `0.320` to `0.413` done/step, close to the same policy in IsaacGym at `0.425`.
-- Re-ran the 50-iteration IsaacGym vs IsaacLab curve check after PhysX solver parity. Tail10 reward/step is now `0.015391` vs IsaacGym `0.015325`; tail10 episode length is `137.414` vs `128.552`.
-- Re-ran the 200-iteration IsaacGym vs IsaacLab curve check after PhysX solver parity. Tail10 episode length is now aligned (`153.004` vs IsaacGym `151.775`), while IsaacLab tail10 reward/step is lower (`0.017457` vs `0.018831`).
-- Replayed IsaacGym and IsaacLab 200-iteration checkpoints in both backends with fixed commands. The same policy now has similar done rates across backends; the remaining difference is that the IsaacLab-trained policy is less stable in both simulators.
-- Fixed IsaacLab train seed parity by setting Python, NumPy, Torch, CUDA, `PYTHONHASHSEED`, and `env_cfg.seed` before DirectRLEnv creation without importing IsaacGym-only helper modules.
-- Re-ran a 50-iteration IsaacLab seeded PhysX parity curve. Episode length stayed close to the prior PhysX parity result; reward/step moved slightly below the IsaacGym baseline, confirming seed parity is primarily a reproducibility fix.
-- Matched IsaacLab friction randomization to IsaacGym's `256`-bucket sampling scheme and verified full smoke validation after the change.
-- Re-ran a 50-iteration IsaacLab seeded bucket-friction curve. Tail10 reward/step is now `0.015411` vs IsaacGym `0.015325`; tail10 episode length is `136.976` vs `128.552`.
-- Re-ran a 200-iteration IsaacLab seeded bucket-friction curve. Tail10 reward/step is now `0.018767` vs IsaacGym `0.018831`; tail10 episode length is `159.801` vs `151.775`.
-- Replayed the latest seeded bucket-friction IsaacLab `model_200.pt` in both backends. The same policy is consistent across backends (`0.423333` done/step on IsaacGym, `0.421667` on IsaacLab), but still less stable than the IsaacGym `model_200.pt` fixed-command replay.
-- Added `analyze_replay_alignment.py` and `docs/REPLAY_ALIGNMENT.md` for fixed-command gait/contact robustness analysis.
-- Extended IsaacGym and IsaacLab replay diagnostics with raw action, action delta, forward base velocity, and foot-contact metrics.
-- Fixed IsaacLab replay diagnostics to set Python, NumPy, Torch, CUDA, `PYTHONHASHSEED`, and `cfg.seed` before DirectRLEnv creation.
-- Added optional IsaacLab reward-tuning CLI overrides: `--reward_scale NAME=VALUE`, `--reward_param NAME=VALUE`, and `--tracking_sigma`.
-- Added default-off `rewards.high_speed_penalty = 0.0` to preserve upstream `low_speed` behavior while allowing overspeed-penalty experiments.
-- Added `docs/REWARD_TUNING.md` with 50- and 200-iteration reward/command-shaping results. The best 200-iteration default-off tuning improved fixed-command replay from `0.426667` to `0.396667` done/step but did not fully close the gait gap.
-- Fixed IsaacLab contact-force body order mapping. IsaacLab `ContactSensor.body_names` may follow the original imported body order while `Articulation.body_names` is left/right interleaved; contact forces are now reordered to robot body order before rewards, observations, and termination checks read them.
-- Re-ran zero/random action contact diagnostics after the ContactSensor mapping fix. Zero-action foot contact now matches IsaacGym closely (`0.911198` vs `0.919401` contact rate, `257.10` vs `259.09` mean foot-force norm).
-- Re-ran default-reward IsaacLab training after the ContactSensor mapping fix. The 200-iteration tail10 curve is now aligned with IsaacGym (`2.855` vs `2.858` mean reward, `151.700` vs `151.775` mean episode length using the current log scale).
-- Replayed the fixed ContactSensor IsaacLab `model_200.pt` in both backends. Fixed-command done/step improved on IsaacLab from the old seeded-bucket policy's `0.421667` to `0.355000`; the same checkpoint records `0.400000` done/step on IsaacGym.
-- Confirmed Route A remains the default: IsaacGym and IsaacLab share the same reward names and default reward values. Reward tuning hooks remain opt-in and are not used by default training.
-- Added explicit `--seed` support to `train_isaaclab.py`.
-- Fixed IsaacGym CLI seed propagation so `--seed` updates both train cfg and env cfg before simulator creation.
-- Fixed IsaacGym rollout diagnostics to apply `HGEX_DIAG_SEED` to env cfg before environment creation.
-- Added `check_reward_parity.py` to statically verify that every default nonzero XBot reward scale has both IsaacGym and IsaacLab reward implementations, and that default-off reward extensions stay disabled.
-- Added reward parity to `validate_smoke.sh` so full smoke validation now fails if default reward implementations diverge.
-- Fixed IsaacLab VecEnv timeout bootstrap parity by forwarding `truncated` as `infos["time_outs"]` to the local PPO runner, matching IsaacGym PPO semantics.
-- Aligned IsaacLab timeout termination comparison with the IsaacGym `episode_length_buf > max_episode_length` condition.
-- Re-ran IsaacLab seed `1` 200-iteration plane training after the timeout fix. Tail10 moved from `3.082 / 160.071` to `2.970 / 155.618`, closer to IsaacGym `2.690 / 151.678`.
-- Replayed the timeout-fix seed `1` IsaacLab checkpoint. Fixed-command done/step improved from `0.388333` to `0.376667` on IsaacGym and from `0.363333` to `0.350000` on IsaacLab.
-- Aligned IsaacLab gait phase timing with Humanoid-Gym/IsaacGym reset semantics by compensating DirectRLEnv's first-observation episode-length offset.
-- Fixed replay diagnostics so reset snapshots are reported only on steps where environments actually reset.
-- Re-ran reward parity, full smoke validation, random-action timing probes, 200-iteration seed `1` training, and fixed-command cross-backend replay after the phase fix. Random-action reward/step now matches closely (`0.030169` IsaacGym vs `0.030331` IsaacLab), while 200-iteration seed `1` training still has a residual tail10 reward gap (`2.690` vs `2.997`) with close final episode length (`150.450` vs `149.290`).
-- Added deterministic action-trace diagnostics: `generate_action_trace.py`, `HGEX_DIAG_ACTION_FILE`, IsaacLab `--action_file`, and `compare_rollout_traces.py`.
-- Updated diagnostic mode to disable action delay/noise in both backends. With fixed actions, processed action and phase now match exactly; the first remaining drift is foot contact onset at step `7`, pointing to contact modeling/reporting rather than reward or action preprocessing.
-- Added per-body/per-shape asset diagnostics and `compare_asset_summaries.py`. IsaacGym and IsaacLab now compare equal by body/joint name set, total mass, per-body inertia, shape count, material friction, restitution, contact offset, and rest offset to numerical precision; only imported body/joint order differs and is handled by existing name-based mappings.
-- Added diagnostic-only deterministic reset controls (`HGEX_DIAG_DETERMINISTIC_RESET=1` and IsaacLab `--deterministic_reset`) to remove reset joint perturbation from replay alignment checks. Fixed-action replay still first drifts at step `7` in foot contact onset, confirming the remaining gap is contact/PhysX behavior rather than reward, action, phase, reset noise, or static asset parameters.
-- Ran `seed=1..5` IsaacGym/IsaacLab plane 200-iteration training alignment and documented it in `docs/MULTISEED_ALIGNMENT.md`. Tail reward/step mean equivalence is above 95% (`96.13%`), but raw tail reward mean equivalence is below 95% (`93.66%`), with failing seeds dominated by contact-related reward-term deltas.
-- Added IsaacGym train CLI terrain switches: `--terrain`, `--measure_heights`, and `--terrain_curriculum`.
-- Fixed IsaacGym rough measured-height critic observations by appending height samples to the current privileged observation instead of a stale observation buffer, and by rebuilding critic history when measured-height dimensions change.
-- Verified IsaacGym rough measured-heights PPO smoke after the observation fix; the critic now builds with `780` inputs.
-- Matched IsaacLab rough/generated-terrain reset placement to the original Humanoid-Gym custom-origin path by adding the same `[-1, 1]` XY randomization around terrain origins.
-- Re-ran seed `1` 200-iteration plane training. IsaacGym tail10 is `2.690 / 151.678`; IsaacLab tail10 is `3.082 / 160.071`, showing remaining seed sensitivity even though seed `5` is closely aligned.
-- Replayed seed `1` 200-iteration checkpoints under fixed command. The IsaacGym policy transfers exactly in done rate (`0.365000` on both backends); the IsaacLab policy is also close in done rate (`0.388333` on IsaacGym, `0.363333` on IsaacLab) but still runs faster and lower than the IsaacGym policy.
-- Ran rough measured-heights 50-iteration checks with seed `1`. IsaacGym tail10 is `1.818 / 118.770`; IsaacLab tail10 is `1.718 / 130.110`.
-- Extended `validate_smoke.sh` with IsaacLab rough terrain measured-heights validation.
-- Verified IsaacLab reward-parity PPO smoke at `2 envs x 4 steps` and `64 envs x 60 steps`.
-- Verified IsaacLab randomization smoke and `64 envs x 60 steps` PPO run after randomization changes.
-- Verified IsaacLab play/export smoke.
-- Verified the full automatic smoke validation script.
-- Re-ran IsaacGym one-iteration regression after adding IsaacLab files; metrics still match the upstream baseline.
-- Documented current IsaacLab API mappings and remaining PPO parity work.
+- Added the IsaacLab Direct workflow path while preserving the Humanoid-Gym user model: centralized robot config, centralized rewards, `train.py`/`play.py` style scripts, and local PPO runner integration.
+- Implemented `IsaacLabBackend`, `XBotIsaacLabEnv`, and `IsaacLabRslRlVecEnv` for DirectRLEnv/Articulation based training and play.
+- Added IsaacLab train/play/export entry points without introducing a Manager-based task split.
+- Preserved XBot policy, critic, and action dimensions in the default IsaacLab plane path: `705/219/12`.
+- Migrated XBot reward dispatch and default reward names so IsaacGym and IsaacLab use the same default reward config.
+- Added IsaacLab rough terrain, `heightfield`/`trimesh` aliases, terrain curriculum, and measured-height support. In measured-height mode, actor observations stay at `705` and critic observations expand to `780`, matching the original Humanoid-Gym pattern.
+- Added IsaacLab action delay/noise, root-velocity push randomization, friction randomization, base-mass randomization, command resampling, heading command, and command curriculum.
+- Fixed IsaacLab PD torque application so torque is recomputed on every physics substep, matching the IsaacGym decimation loop.
+- Aligned IsaacLab joint state, action, torque, reference DOF, and contact-force body ordering with the IsaacGym canonical XBot order.
+- Aligned IsaacLab timeout handling, gait phase timing, seeded training setup, rigid-shape material/contact defaults, PhysX solver settings, and friction bucket sampling with the IsaacGym baseline.
+- Fixed IsaacLab XBot-L self-collision mapping by applying the Humanoid-Gym collision-filter flag to both `UrdfFileCfg.self_collision` during URDF conversion and `ArticulationRootPropertiesCfg.enabled_self_collisions` on the articulation root.
+- Added `asset.isaaclab_self_collisions = 1` as the XBot-L IsaacLab default while keeping the original IsaacGym `asset.self_collisions` field unchanged.
+- Regressed IsaacLab self-collision on/off with a 600-step fixed-command trained-policy rollout. On the current XBot-L asset/checkpoint, both settings produced the same measured rollout (`base_z_last_mean=0.8942`, `foot_fz_last_mean=262.2729`, zero resets), so the reported floating issue was not reproduced locally under this scenario.
+- Re-ran seed `42` plane training after the self-collision mapping fix at `64 envs x 60 steps x 200 iterations` on IsaacGym and IsaacLab. Tail10 reward/step alignment is `98.90%` (`0.019166` IsaacGym vs `0.018955` IsaacLab), tail10 reward alignment is `98.22%`, and tail10 episode-length alignment is `99.31%`.
+- Completed long plane and rough-terrain validation across IsaacGym and IsaacLab. Plane training is closely aligned; rough measured-height terrain runs end-to-end with matching reward definitions and observation dimensions, but long rough-terrain convergence remains a known residual gap.
+- Kept optional parity/tuning switches default-off so the published default route uses the same reward names and default reward values across IsaacGym and IsaacLab.
 
 ## Unreleased - Phase 1 IsaacGym Backend Adapter
 
